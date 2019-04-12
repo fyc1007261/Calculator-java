@@ -10,5 +10,8 @@
         <module name="stproj" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="stproj" target="1.5" />
+    </bytecodeTargetLevel>
   </component>
 </project>
