@@ -122,11 +122,11 @@ public class Calculate {
         return result.toString();
     }
 
-    private int factorial(double n) throws Exception {
+    private double factorial(double n) throws Exception {
         //to calculate n!
         if ((int) n != n || n < 0) throw new Exception("Factorial operation should involve a positive integer");//not a positive integer.
-        if (n == 0) return 1;
-        int result = 1;
+        if (n == 0) return 1.0;
+        double result = 1;
         for (int i = 1; i <= n; i++) result *= i;
         return result;
     }
