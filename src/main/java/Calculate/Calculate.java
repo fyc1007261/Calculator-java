@@ -30,7 +30,7 @@ public class Calculate {
         for (int i = start + 1; i < s.length(); i++) {
             if (s.charAt(i) == '.') {
                 if (num_of_dot == 0) num_of_dot++;
-                else throw new Exception("More than one dots found in a number");
+                else throw new Exception("More than one dot found in a number");
             } else if (!(s.charAt(i) >= '0' && s.charAt(i) <= '9')) return i;
         }
         throw new Exception("Invalid input");
@@ -175,19 +175,20 @@ public class Calculate {
 
     private double str_to_num(String s) throws Exception {
         if (s.equals("error")) return 0;
+        if (s.equals("")) throw new Exception("Invalid input");
         if (s.charAt(0) == '-') return -str_to_num(cut_str(s, 1, s.length() - 1));//deal with negative.
         if (s.equals("R")) {
             if (saved) return saving;
             else throw new Exception("No saved value");
         }
-        if (s.length() == 0) throw new Exception();
+
         int num_of_dot = 0;
         for (int i = 0; i < s.length(); i++) {//to judge whether it is a number.
             if (s.charAt(i) < '0' || s.charAt(i) > '9') {
                 if (s.charAt(i) != '.') throw new Exception("Invalid token.");
                 else if (s.charAt(i) == '.') {
                     num_of_dot++;
-                    if (num_of_dot > 1) throw new Exception("More than one dots found in a number");//a number should not include 2 dots.
+                    if (num_of_dot > 1) throw new Exception("More than one dot found in a number");//a number should not include 2 dots.
                 }
             }
         }

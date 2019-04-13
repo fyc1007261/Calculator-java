@@ -2,6 +2,8 @@ package Calculate;
 
 import org.junit.Test;
 
+import java.math.BigDecimal;
+
 import static org.junit.Assert.*;
 
 public class CalculateTest {
@@ -98,11 +100,43 @@ public class CalculateTest {
 
 
         //取余
-        //assertEquals(Double.valueOf(10.5+10), Double.valueOf(calculate.calculate("10.5+10")));
-        //assertEquals(Double.valueOf(0+10.5), Double.valueOf(calculate.calculate("0+10.5")));
-        //assertEquals(Double.valueOf(70), Double.valueOf(calculate.calculate("70+0")));
-        //assertEquals(Double.valueOf(-75+10), Double.valueOf(calculate.calculate("-75+10")));
-        //assertEquals(Double.valueOf(100+-10), Double.valueOf(calculate.calculate("100+-10")));
-        //assertEquals(Double.valueOf(101+-10.5), Double.valueOf(calculate.calculate("101+-10.5")));
+        assertEquals("Mod operation should involve two integers", calculate.calculate("10.5%10"));
+        assertEquals("Mod operation should involve two integers", calculate.calculate("0%10.5"));
+        assertEquals("Mod by zero!", calculate.calculate("70%0"));
+        assertEquals(Double.valueOf(-5), Double.valueOf(calculate.calculate("-75%10")));
+        assertEquals(Double.valueOf(0), Double.valueOf(calculate.calculate("100%-10")));
+        assertEquals(Double.valueOf(0), Double.valueOf(calculate.calculate("0%-7")));
+
+        //复杂表示式
+        assertEquals(Double.valueOf(10), Double.valueOf(calculate.calculate("3+++4--3")));
+        assertEquals("Divided by zero", calculate.calculate("3*(2+3)/0"));
+        assertEquals(Double.valueOf(67), Double.valueOf(calculate.calculate("3+4^2*4")));
+        assertEquals(Double.valueOf(2), Double.valueOf(calculate.calculate("4/2^2*2")));
+        assertEquals(Double.valueOf(1), Double.valueOf(calculate.calculate("36/3!^2")));
+        assertEquals(Double.valueOf(-53), Double.valueOf(calculate.calculate("-10^2/2+-3")));
+        assertTrue(assertNear(1.28, Double.valueOf(calculate.calculate("1.6^2/2!")), 0.001));
+        assertEquals(Double.valueOf(56), Double.valueOf(calculate.calculate("1-2*(30+(-40.0/5)*(19-4!/2))-(-4*3)/2^(8-3*2)")));
+        assertEquals(Double.valueOf(5), Double.valueOf(calculate.calculate("2+3M")));
+        assertEquals(Double.valueOf(25), Double.valueOf(calculate.calculate("R*5")));
+        assertEquals(Double.valueOf(0), Double.valueOf(calculate.calculate("3-3M")));
+        assertEquals("Mod by zero!", calculate.calculate("9%R"));
+    }
+
+    private boolean assertNear(double a, double b, double precision){
+        return Math.abs(a-b) <= precision;
+    }
+
+    @Test
+    //无效输入
+    public void calculateTest3() {
+        Calculate calculate = new Calculate();
+        assertEquals("Invalid input", calculate.calculate("3/"));
+        assertEquals("Invalid input", calculate.calculate("**5"));
+        assertEquals("Invalid input", calculate.calculate("5*/7"));
+        assertEquals("More than one dot found in a number", calculate.calculate("1...3*5"));
+        assertEquals("No input", calculate.calculate(""));
+        assertEquals("No saved value", calculate.calculate("R+1"));
+        assertEquals("Invalid parentheses", calculate.calculate("5*(6+(3-1)"));
+        assertEquals("Invalid input", calculate.calculate("!7"));
     }
 }
