@@ -10,7 +10,7 @@ public class CalculateTest {
 
     @Test
     //等价类划分
-    public void calculateTest1() {
+    public void calculateTestEquivalenceClass() {
         Calculate calculate = new Calculate();
         //整型
         assertEquals(Double.valueOf(30+40), Double.valueOf(calculate.calculate("30+40")));
@@ -50,7 +50,7 @@ public class CalculateTest {
     }
     @Test
     //边界值分析
-    public void calculateTest2() {
+    public void calculateTestBoundaryValue() {
         Calculate calculate = new Calculate();
         //加
         assertEquals(Double.valueOf(10.5+10), Double.valueOf(calculate.calculate("10.5+10")));
@@ -106,8 +106,16 @@ public class CalculateTest {
         assertEquals(Double.valueOf(-5), Double.valueOf(calculate.calculate("-75%10")));
         assertEquals(Double.valueOf(0), Double.valueOf(calculate.calculate("100%-10")));
         assertEquals(Double.valueOf(0), Double.valueOf(calculate.calculate("0%-7")));
+    }
 
-        //复杂表示式
+    private boolean assertNear(double a, double b, double precision){
+        return Math.abs(a-b) <= precision;
+    }
+
+    @Test
+    //复杂表示式
+    public void calculateTestComplex() {
+        Calculate calculate = new Calculate();
         assertEquals(Double.valueOf(10), Double.valueOf(calculate.calculate("3+++4--3")));
         assertEquals("Divided by zero", calculate.calculate("3*(2+3)/0"));
         assertEquals(Double.valueOf(67), Double.valueOf(calculate.calculate("3+4^2*4")));
@@ -122,13 +130,9 @@ public class CalculateTest {
         assertEquals("Mod by zero!", calculate.calculate("9%R"));
     }
 
-    private boolean assertNear(double a, double b, double precision){
-        return Math.abs(a-b) <= precision;
-    }
-
     @Test
     //无效输入
-    public void calculateTest3() {
+    public void calculateTestInvalidInput() {
         Calculate calculate = new Calculate();
         assertEquals("Invalid input", calculate.calculate("3/"));
         assertEquals("Invalid input", calculate.calculate("**5"));
