@@ -35,11 +35,6 @@ public class CalculatorUnitTest {
             assertEquals(-8.0, result);
 
 
-            // invalid
-            result = method.invoke(calculator, -2, 0.5);
-            assertEquals(0.0, result);
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -99,6 +94,39 @@ public class CalculatorUnitTest {
             fail();
         }
     }
+
+    @Test
+    public void testInit() {
+        try {
+            Method method = c.getDeclaredMethod("init", String.class);
+            method.setAccessible(true);
+            Object result;
+
+            // deal with M
+            result = method.invoke(calculator, "1+2M");
+            assertEquals("1+2", result);
+            // normal
+            result = method.invoke(calculator, "1++2");
+            assertEquals("1+2", result);
+            result = method.invoke(calculator, "1--2+-4");
+            assertEquals("1+2-4", result);
+            result = method.invoke(calculator, "(1--23)+(-(4+6))--3");
+            assertEquals("(1+23)+(-(4+6))+3", result);
+
+
+            try {
+                result = method.invoke(calculator, "");
+                fail();
+            } catch (Exception ex){
+                assert true;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
 
     @Test
     public void testMod() {
@@ -350,5 +378,259 @@ public class CalculatorUnitTest {
             fail();
         }
     }
+
+    @Test
+    public void testPrimary() {
+        try {
+            Method method = c.getDeclaredMethod("primary", String.class);
+            method.setAccessible(true);
+            Object result;
+
+            // normal
+            result = method.invoke(calculator,  "123");
+            assertEquals(123.0, result);
+            result = method.invoke(calculator,  "4!");
+            assertEquals(24.0, result);
+            result = method.invoke(calculator,  "-12");
+            assertEquals(-12.0, result);
+
+            // invalid number
+            try {
+                result = method.invoke(calculator, "12!3");
+                fail();
+            } catch (Exception ex){
+                assert true;
+            }
+
+            try {
+                result = method.invoke(calculator, "asdasda");
+                fail();
+            } catch (Exception ex){
+                assert true;
+            }
+
+            try {
+                result = method.invoke(calculator, "123.33!");
+                fail();
+            } catch (Exception ex){
+                assert true;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    public void testLessPrimary() {
+        try {
+            Method method = c.getDeclaredMethod("less_primary", String.class);
+            method.setAccessible(true);
+            Object result;
+
+            // normal
+            result = method.invoke(calculator,  "123");
+            assertEquals(123.0, result);
+            result = method.invoke(calculator,  "-123.9");
+            assertEquals(-123.9, result);
+            result = method.invoke(calculator,  "2^3");
+            assertEquals(8.0, result);
+
+            // invalid number
+            try {
+                result = method.invoke(calculator, "");
+                fail();
+            } catch (Exception ex){
+                assert true;
+            }
+
+            try {
+                result = method.invoke(calculator, "asdasda");
+                fail();
+            } catch (Exception ex){
+                assert true;
+            }
+
+            try {
+                result = method.invoke(calculator, "^32");
+                fail();
+            } catch (Exception ex){
+                assert true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    public void testTerm() {
+        try {
+            Method method = c.getDeclaredMethod("term", String.class);
+            method.setAccessible(true);
+            Object result;
+
+            // normal
+            result = method.invoke(calculator,  "123");
+            assertEquals(123.0, result);
+            result = method.invoke(calculator,  "2^3!*2");
+            assertEquals(128.0, result);
+            result = method.invoke(calculator,  "2!^3");
+            assertEquals(8.0, result);
+            result = method.invoke(calculator,  "5*2^3");
+            assertEquals(40.0, result);
+            result = method.invoke(calculator,  "5*2%3");
+            assertEquals(1.0, result);
+            result = method.invoke(calculator,  "5/2*3");
+            assertEquals(7.5, result);
+
+            // invalid number
+            try {
+                result = method.invoke(calculator, "");
+                fail();
+            } catch (Exception ex){
+                assert true;
+            }
+
+            try {
+                result = method.invoke(calculator, "*3");
+                fail();
+            } catch (Exception ex){
+                assert true;
+            }
+
+            try {
+                result = method.invoke(calculator, "4/0");
+                fail();
+            } catch (Exception ex){
+                assert true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    public void testExpression() {
+        try {
+            Method method = c.getDeclaredMethod("expression", String.class);
+            method.setAccessible(true);
+            Object result;
+
+            // normal
+            result = method.invoke(calculator,  "3+4-3");
+            assertEquals(4.0, result);
+            result = method.invoke(calculator,  "3+4^2*4");
+            assertEquals(67.0, result);
+            result = method.invoke(calculator,  "4/2^2*2");
+            assertEquals(2.0, result);
+            result = method.invoke(calculator,  "36/3!^2");
+            assertEquals(1.0, result);
+            result = method.invoke(calculator,  "-10^2/2-3");
+            assertEquals(-53.0, result);
+            result = method.invoke(calculator,  "4^2/2!");
+            assertEquals(8.0, result);
+            result = method.invoke(calculator,  "1-2*(30+((-40.0)/5)*(19-4!/2))-((-4)*3)/2^(8-3*2)");
+            assertEquals(56.0, result);
+
+            // invalid number
+            try {
+                result = method.invoke(calculator, "");
+                fail();
+            } catch (Exception ex){
+                assert true;
+            }
+
+            try {
+                result = method.invoke(calculator, "3*(2+3)/0");
+                fail();
+            } catch (Exception ex){
+                assert true;
+            }
+
+            try {
+                result = method.invoke(calculator, "3*(2+3)/(2-(1+1))");
+                fail();
+            } catch (Exception ex){
+                assert true;
+            }
+
+
+            try {
+                result = method.invoke(calculator, "3/");
+                fail();
+            } catch (Exception ex){
+                assert true;
+            }
+
+            try {
+                result = method.invoke(calculator, "1+(2))");
+                fail();
+            } catch (Exception ex){
+                assert true;
+            }
+
+            try {
+                result = method.invoke(calculator, "6*/7");
+                fail();
+            } catch (Exception ex){
+                assert true;
+            }
+
+
+            try {
+                result = method.invoke(calculator, "1..3*7");
+                fail();
+            } catch (Exception ex){
+                assert true;
+            }
+
+            try {
+                result = method.invoke(calculator, "!13*7");
+                fail();
+            } catch (Exception ex){
+                assert true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    public void testCalculate() {
+        try {
+            Method method = c.getDeclaredMethod("calculate", String.class);
+            method.setAccessible(true);
+            Object result;
+
+
+            // invalid number
+            result = method.invoke(calculator,  "3+4^3*R");
+            assertEquals("No saved value", result);
+
+            // test M and R
+            result = method.invoke(calculator,  "3+4-3M");
+            assertEquals("4.0", result);
+
+            result = method.invoke(calculator,  "R");
+            assertEquals("4.0", result);
+
+            result = method.invoke(calculator,  "(3+4*R)^2");
+            assertEquals("361.0", result);
+
+            result = method.invoke(calculator,  "4%(R-4)");
+            assertEquals("Mod by zero!", result);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+
 
 }

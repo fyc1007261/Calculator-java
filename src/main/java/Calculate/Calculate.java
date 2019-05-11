@@ -4,12 +4,12 @@ public class Calculate {
     private boolean save = false, saved = false;//save represents whether the ans should be saved, while saved represents whether there is an ans in storage.
     private double saving = 0;//the number in storage.\
 
-    private double power(double a, double b) {
+    private double power(double a, double b) throws Exception {
         //to calculate a^b.
         if (b == 0)
             return 1;
         if (a < 0 && (int) b != b)
-            return 0;
+            throw new Exception("Invalid Exponentiation");
         return Math.pow(a, b);
     }
 
@@ -76,8 +76,8 @@ public class Calculate {
             save = true;
             return init(cut_str(equation, 0, equation.length() - 2));
         }
-        if (equation.charAt(equation.length() - 1) == ';')
-            return init(cut_str(equation, 0, equation.length() - 2));
+//        if (equation.charAt(equation.length() - 1) == ';')
+//            return init(cut_str(equation, 0, equation.length() - 2));
         //^ to deal with 'M' and ';'.
         int pon = 1;//positve or negative.
         int i = 0, j = 0;
@@ -106,7 +106,6 @@ public class Calculate {
                     end = true;
                 if (found && modified)
                     break;
-                //cout << i <<equation.size()<< endl;
             }
             if (end)
                 break;
@@ -241,7 +240,7 @@ public class Calculate {
                 right = j;
                 found = true;
             }
-        }//to search for the outermost '()'
+        }// to search for the outermost '()'
         StringBuffer inside = new StringBuffer("");//the equation indside the "()".
         if ((left != 0 || right != equation.length() - 1) && found)
             throw new Exception("Invalid parentheses");//if a couple of '()' has been found, it must be outermost.
@@ -254,8 +253,8 @@ public class Calculate {
     }
 
     private double primary(String equation) throws Exception {
-        //Different from the book, the function "primary" deals with '!'.
-        //See more in "veryPrimary".
+        // Different from the book, the function "primary" deals with '!'.
+        // See more in "veryPrimary".
         double position = get_token(equation, '!');
         if (position == -0.1)
             return very_primary(equation);
@@ -292,8 +291,10 @@ public class Calculate {
         int abspos = (int) Math.abs(position);
         StringBuffer l_equation = new StringBuffer(""), r_equation = new StringBuffer("");//which represents the term(expression) on the left(right) side of the token.
         if (position != -0.1) {
-            for (int i = 0; i < abspos; i++) l_equation.append(equation.charAt(i));
-            for (int j = abspos + 1; j < equation.length(); j++) r_equation.append(equation.charAt(j));
+            for (int i = 0; i < abspos; i++)
+                l_equation.append(equation.charAt(i));
+            for (int j = abspos + 1; j < equation.length(); j++)
+                r_equation.append(equation.charAt(j));
         }
         if (position == 0 || position == 0.1)
             throw new Exception("Invalid input");//as '*', '/' and '%' should never exist at the beginning of a term.
